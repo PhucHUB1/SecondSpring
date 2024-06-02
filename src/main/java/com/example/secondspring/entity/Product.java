@@ -1,36 +1,39 @@
-package com.example.secondspring;
+package com.example.secondspring.entity;
 
+import jakarta.persistence.*;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import java.util.Set;
 
-//model
 @Entity
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
+
     private String name;
     private double price;
     private String description;
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(name = "Order_detail",
+            joinColumns = @JoinColumn(name = "product_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "order_id", referencedColumnName = "id"))
+    private Set<Order> orders;
 
-    public Product() {
-    }
+    public Product() {}
 
-    public Product(Long id, String name, double price, String description) {
+    public Product(long id, String name, double price, String description, Set<Order> orders) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.description = description;
+        this.orders = orders;
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 
